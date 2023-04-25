@@ -1,22 +1,24 @@
+//requires for express/dbconnection/routes
 const express = require('express');
-const mongoose = require('mongoose');
+const db = require('./config/configuration.js');
+const routes = require('./routes');
 
-const app = express();
+//declaring port numbers
 const PORT = process.env.PORT || 3001;
 
-app.use(express.json());
+//declare app variable for express
+const app = express();
+
+//app.use for urlencoded and json
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.json());
 
-app.use(require('./routes'));
+//.use for routes
+app.use(routes);
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/18-NoSQL-Social-Network-API', {
-  useFindAndModify: false,
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
-
-// Use this to log mongo queries being executed!
-mongoose.set('debug', true);
-
-app.listen(PORT, () => console.log(`Connected on localhost:${PORT}`));
+//database connection
+db.once('open', () => {
+    app.listen(PORT, () => {
+      console.log(`API server running on port ${PORT}!`);
+    });
+  });

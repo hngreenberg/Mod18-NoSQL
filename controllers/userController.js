@@ -1,32 +1,33 @@
+// ObjectId() method for converting userId string into an ObjectId for querying database
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
-
+// Aggregate function to get the number of users overall
 const headCount = async () =>
-  User.aggregate()
+  user.aggregate()
     .count('userCount')
-    .then((numberOfUsers) => numberOfUsers);
+    .then((numberOfusers) => numberOfusers);
 
-
+// Aggregate function for getting the overall grade using $avg
 const grade = async (userId) =>
-  User.aggregate([
-    
+  user.aggregate([
+    // only include the given user by using $match
     { $match: { _id: ObjectId(userId) } },
     {
-      $unwind: '$friends',
+      $unwind: '$assignments',
     },
     {
       $group: {
         _id: ObjectId(userId),
-        overallGrade: { $avg: '$friends.score' },
+        overallGrade: { $avg: '$assignments.score' },
       },
     },
   ]);
 
 module.exports = {
   // Get all users
-  getUsers(req, res) {
-    User.find()
+  getusers(req, res) {
+    user.find()
       .then(async (users) => {
         const userObj = {
           users,
@@ -34,12 +35,13 @@ module.exports = {
         };
         return res.json(userObj);
       })
+      .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
-      }
+      });
   },
-  
-  getSingleUser(req, res) 
+  // Get a single user
+  getSingleuser(req, res) {
     user.findOne({ _id: req.params.userId })
       .select('-__v')
       .then(async (user) =>
@@ -54,15 +56,15 @@ module.exports = {
         console.log(err);
         return res.status(500).json(err);
       });
-  ;
+  },
   // create a new user
-  createuser(req, res) 
+  createuser(req, res) {
     user.create(req.body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
-  ;
+  },
   // Delete a user and remove them from the course
-  deleteuser(req, res) 
+  deleteuser(req, res) {
     user.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
         !user
@@ -84,10 +86,10 @@ module.exports = {
         console.log(err);
         res.status(500).json(err);
       });
-  ;
+  },
 
   // Add an assignment to a user
-  addAssignment(req, res) 
+  addAssignment(req, res) {
     console.log('You are adding an assignment');
     console.log(req.body);
     user.findOneAndUpdate(
@@ -103,9 +105,9 @@ module.exports = {
           : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
-  ;
+  },
   // Remove assignment from a user
-  removeAssignment(req, res) 
+  removeAssignment(req, res) {
     user.findOneAndUpdate(
       { _id: req.params.userId },
       { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
@@ -119,5 +121,5 @@ module.exports = {
           : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
-  ;
-
+  },
+};

@@ -1,4 +1,6 @@
 const { Schema, Types } = require('mongoose');
+const reactionSchema = require('../models/Reaction');
+const moment = require('moment');
 
 const ThoughtSchema = new Schema(
   {
@@ -15,13 +17,14 @@ const ThoughtSchema = new Schema(
     },
     createdAt: {
       type: Date,
-      default: Date, now,
+      default: Date.now,
       get: createdAtVal => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a')
     },
     username: {
       type: String,
       required: true,
     },
+    reactions: [reactionSchema]
   },
   {
     toJSON: {
@@ -31,4 +34,10 @@ const ThoughtSchema = new Schema(
   }
 );
 
+
+
+
+
+
+//export Thought model
 module.exports = ThoughtSchema;
