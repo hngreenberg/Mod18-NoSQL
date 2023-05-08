@@ -1,69 +1,14 @@
-const { Thought, User, Reaction } = require('../models');
+const { Thought, User } = require('../models');
 
-module.exports = {
+
  
-  getthoughts(req, res) {
+  getAllThoughts(req, res) {
     thought.find()
       .then((thoughts) => res.json(thoughts))
       .catch((err) => res.status(500).json(err));
-  },
-  // Get a thought
-  getSinglethought(req, res) {
-    thought.findOne({ _id: req.params.thoughtId })
-      .select('-__v')
-      .then((thought) =>
-        !thought
-          ? res.status(404).json({ message: 'No thought with that ID' })
-          : res.json(thought)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-  // Create a thought
-  createthought(req, res) {
-    thought.create(req.body)
-      .then((thought) => res.json(thought))
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json(err);
-      });
-  },
-  // Delete a thought
-  deletethought(req, res) {
-    thought.findOneAndDelete({ _id: req.params.thoughtId })
-      .then((thought) =>
-        !thought
-          ? res.status(404).json({ message: 'No thought with that ID' })
-          : Student.deleteMany({ _id: { $in: thought.students } })
-      )
-      .then(() => res.json({ message: 'thought and students deleted!' }))
-      .catch((err) => res.status(500).json(err));
-  },
-  // Update a thought
-  updatethought(req, res) {
-    thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
-      { $set: req.body },
-      { runValidators: true, new: true }
-    )
-      .then((thought) =>
-        !thought
-          ? res.status(404).json({ message: 'No thought with this id!' })
-          : res.json(thought)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-};
-const { thought, Student } = require('../models');
+  }
 
-module.exports = {
-  // Get all thoughts
-  getthoughts(req, res) {
-    thought.find()
-      .then((thoughts) => res.json(thoughts))
-      .catch((err) => res.status(500).json(err));
-  },
-  // Get a thought
-  getSinglethought(req, res) {
+  getSingleThought(req, res) {
     thought.findOne({ _id: req.params.thoughtId })
       .select('-__v')
       .then((thought) =>
@@ -72,18 +17,18 @@ module.exports = {
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
-  },
-  // Create a thought
-  createthought(req, res) {
+  }
+  // Create a new thought
+  createThought(req, res) {
     thought.create(req.body)
       .then((thought) => res.json(thought))
       .catch((err) => {
         console.log(err);
         return res.status(500).json(err);
       });
-  },
+  }
   // Delete a thought
-  deletethought(req, res) {
+  deleteThought(req, res) {
     thought.findOneAndDelete({ _id: req.params.thoughtId })
       .then((thought) =>
         !thought
@@ -92,9 +37,9 @@ module.exports = {
       )
       .then(() => res.json({ message: 'thought and students deleted!' }))
       .catch((err) => res.status(500).json(err));
-  },
+  }
   // Update a thought
-  updatethought(req, res) {
+  updateThought(req, res) {
     thought.findOneAndUpdate(
       { _id: req.params.thoughtId },
       { $set: req.body },
@@ -106,5 +51,9 @@ module.exports = {
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
-  },
-};
+  }
+
+const { Thought, User } = require('../models');
+
+
+module.exports = thoughtController;
