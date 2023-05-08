@@ -1,14 +1,14 @@
-// ObjectId() method for converting userId string into an ObjectId for querying database
+const express = require('express');
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
-// Aggregate function to get the number of users overall
+const router = express.Router();
 const headCount = async () =>
   user.aggregate()
     .count('userCount')
     .then((numberOfusers) => numberOfusers);
 
-// Aggregate function for getting the overall grade using $avg
+
 const grade = async (userId) =>
   user.aggregate([
     // only include the given user by using $match
@@ -57,13 +57,13 @@ module.exports = {
         return res.status(500).json(err);
       });
   },
-  // create a new user
+
   createuser(req, res) {
     user.create(req.body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
-  // Delete a user and remove them from the course
+ 
   deleteuser(req, res) {
     user.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
@@ -88,7 +88,7 @@ module.exports = {
       });
   },
 
-  // Add an assignment to a user
+  
   addAssignment(req, res) {
     console.log('You are adding an assignment');
     console.log(req.body);
@@ -106,7 +106,7 @@ module.exports = {
       )
       .catch((err) => res.status(500).json(err));
   },
-  // Remove assignment from a user
+ 
   removeAssignment(req, res) {
     user.findOneAndUpdate(
       { _id: req.params.userId },
@@ -123,3 +123,5 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
 };
+
+module.exports = router;
