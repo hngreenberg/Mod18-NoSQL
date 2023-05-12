@@ -1,33 +1,12 @@
-const express = require('express');
+
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
-const router = express.Router();
-const headCount = async () =>
-  user.aggregate()
-    .count('userCount')
-    .then((numberOfusers) => numberOfusers);
-
-
-const grade = async (userId) =>
-  user.aggregate([
-    // only include the given user by using $match
-    { $match: { _id: ObjectId(userId) } },
-    {
-      $unwind: '$assignments',
-    },
-    {
-      $group: {
-        _id: ObjectId(userId),
-        overallGrade: { $avg: '$assignments.score' },
-      },
-    },
-  ]);
 
 module.exports = {
-  // Get all users
+  
   getusers(req, res) {
-    user.find()
+    User.find()
       .then(async (users) => {
         const userObj = {
           users,
@@ -42,7 +21,7 @@ module.exports = {
   },
   // Get a single user
   getSingleuser(req, res) {
-    user.findOne({ _id: req.params.userId })
+    User.findOne({ _id: req.params.userId })
       .select('-__v')
       .then(async (user) =>
         !user
@@ -59,13 +38,22 @@ module.exports = {
   },
 
   createuser(req, res) {
-    user.create(req.body)
+    User.create(req.body)
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
+
+  updateUser(req, res) {
+    User.update(req.body, req.params.userId)
+      .then((user) => res.json(user))
+        .catch((err) => res.status(500).json(err))
+      },
+
+
+
  
   deleteuser(req, res) {
-    user.findOneAndRemove({ _id: req.params.userId })
+    User.findOneAndRemove({ _id: req.params.userId })
       .then((user) =>
         !user
           ? res.status(404).json({ message: 'No such user exists' })
@@ -89,10 +77,10 @@ module.exports = {
   },
 
   
-  addAssignment(req, res) {
-    console.log('You are adding an assignment');
+  addFriend(req, res) {
+    console.log('You are adding an friend');
     console.log(req.body);
-    user.findOneAndUpdate(
+    User.findOneAndUpdate(
       { _id: req.params.userId },
       { $addToSet: { assignments: req.body } },
       { runValidators: true, new: true }
@@ -107,10 +95,10 @@ module.exports = {
       .catch((err) => res.status(500).json(err));
   },
  
-  removeAssignment(req, res) {
-    user.findOneAndUpdate(
+  removeFriend(req, res) {
+    User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
+      { $pull: { friend: { friendId: req.params.friendId } } },
       { runValidators: true, new: true }
     )
       .then((user) =>
@@ -124,4 +112,4 @@ module.exports = {
   },
 };
 
-module.exports = router;
+
