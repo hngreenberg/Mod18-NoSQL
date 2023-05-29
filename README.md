@@ -19,4 +19,12 @@
 
 
 
+## How to Deploy
+
+1. Clone Repo
+2. npm install
+3. npm start
+4. Open Insomnia
+5. Use Get, Post, Put, and Delete as shown in the User and Thought Routes.
+
 
